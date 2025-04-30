@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edit Prescription</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 400px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<h2>Edit Prescription</h2>
+<form th:action="@{/prescriptions/update}" th:object="${prescription}" method="post">
+  <input type="hidden" th:field="*{id}" />
+  <input type="hidden" th:field="*{appointment.id}" />
+
+  <label>Select Medicines:</label>
+  <select name="selectedMedicineIds" multiple>
+    <option th:each="medicine : ${allMedicines}"
+            th:value="${medicine.id}"
+            th:text="${medicine.name}"
+            th:selected="${prescription.medicines.contains(medicine)}">
+    </option>
+  </select>
+
+  <button type="submit">Update Prescription</button>
+</form>
+</body>
+</html>

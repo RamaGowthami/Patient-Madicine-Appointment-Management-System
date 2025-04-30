@@ -1,0 +1,120 @@
+<!--<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Register Patient</title>
+</head>
+<body>
+<h2>Patient Registration</h2>
+
+
+<div th:if="${error}" class="error-message">
+  <p th:text="${error}"></p>
+</div>
+
+<form th:action="@{/api/patients/register}" th:object="${patient}" method="post">
+  <label for="name">Name:</label>
+  <input type="text" id="name" th:field="*{name}" required />
+  <div th:if="${#fields.hasErrors('name')}" class="error">
+    <p th:errors="*{name}"></p>
+  </div>
+
+  <label for="contactNumber">Contact Number:</label>
+  <input type="text" id="contactNumber" th:field="*{contactNumber}" required />
+  <div th:if="${#fields.hasErrors('contactNumber')}" class="error">
+    <p th:errors="*{contactNumber}"></p>
+  </div>
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" th:field="*{email}" required />
+  <div th:if="${#fields.hasErrors('email')}" class="error">
+    <p th:errors="*{email}"></p>
+  </div>
+  <label for="age">Age:</label>
+  <input type="number" id="age" th:field="*{age}" required />
+
+  <label for="password">Password:</label>
+  <input type="password" id="password" th:field="*{password}" required />
+  <div th:if="${#fields.hasErrors('password')}" class="error">
+    <p th:errors="*{password}"></p>
+  </div>
+
+  <button type="submit">Register</button>
+</form>
+</body>
+</html>
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Register Patient</title>
+  <!-- Bootstrap CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .form-container {
+      max-width: 500px;
+      margin: 50px auto;
+      padding: 30px;
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .error {
+      color: red;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+<div class="container">
+  <div class="form-container">
+    <h2 class="text-center mb-4">Patient Registration</h2>
+    <!-- Success Message -->
+    <div th:if="${successMessage}" class="alert alert-success text-center">
+      <p th:text="${successMessage}"></p>
+    </div>
+    <a href="/dashboard" class="btn btn-secondary">Go to Dashboard</a>
+    <!-- Error Message -->
+    <div th:if="${error}" class="alert alert-danger text-center">
+      <p th:text="${error}"></p>
+    </div>
+
+    <form th:action="@{/api/patients/register}" th:object="${patient}" method="post">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" th:field="*{name}" class="form-control" required />
+        <div th:if="${#fields.hasErrors('name')}" class="error" th:errors="*{name}"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="contactNumber">Contact Number:</label>
+        <input type="text" id="contactNumber" th:field="*{contactNumber}" class="form-control" required />
+        <div th:if="${#fields.hasErrors('contactNumber')}" class="error" th:errors="*{contactNumber}"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" th:field="*{email}" class="form-control" required />
+        <div th:if="${#fields.hasErrors('email')}" class="error" th:errors="*{email}"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="age">Age:</label>
+        <input type="number" id="age" th:field="*{age}" class="form-control" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" th:field="*{password}" class="form-control" required />
+        <div th:if="${#fields.hasErrors('password')}" class="error" th:errors="*{password}"></div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">Register</button>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>
+

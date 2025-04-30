@@ -1,0 +1,41 @@
+<!--<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+<h2>Welcome to Dashboard</h2>
+
+<ul>
+    <li><a th:href="@{/patients/register}">Patient Registration</a></li>
+    <li><a th:href="@{/appointments}">Appointments</a></li>-->
+   <!-- <li><a th:href="@{/medicines}">Medicines</a></li>-->
+<!--</ul>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Logout</button>
+</form>
+<a href="/doctors">Manage Doctors</a>
+
+</body>
+</html>-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+<h2>Welcome to Dashboard</h2>
+
+<ul>
+    <li><a th:href="@{/patients/register}">Patient Registration</a></li>
+    <li><a th:href="@{/appointments}">Appointments</a></li>
+    <!-- <li><a th:href="@{/medicines}">Medicines</a></li> -->
+    <li><a th:href="@{/doctors}">Manage Doctors</a></li> <!-- ✅ Added here -->
+</ul>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Logout</button>
+</form>
+</body>
+</html>

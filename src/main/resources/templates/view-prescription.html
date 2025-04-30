@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>View Prescription</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+  <h2 class="mb-4">Prescription Details</h2>
+
+  <div class="card p-4" th:if="${prescription != null}">
+    <div class="mb-3">
+      <strong>Dosage:</strong>
+      <span th:text="${prescription.dosage}"></span>
+    </div>
+
+    <div class="mb-3">
+      <strong>Notes:</strong>
+      <p th:text="${prescription.notes}"></p>
+    </div>
+
+    <!--<div class="mb-3">
+      <strong>Medicines:</strong>
+      <ul>
+        <li th:each="med : ${prescription.medicines}" th:text="${med.name}"></li>
+      </ul>
+    </div>-->
+    <p><strong>Medicines:</strong></p>
+    <ul>
+      <li th:each="med : ${prescription.medicines}">
+        <strong th:text="${med.name != null ? med.name : 'No name'}">Medicine Name</strong> -
+        <span th:text="${med.dosage != null ? med.dosage : 'No dosage'}">Dosage</span> -
+        <span th:text="${med.instructions != null ? med.instructions : 'No instructions'}">Instructions</span> -
+        Quantity: <span th:text="${med.quantity}">0</span>
+      </li>
+
+    </ul>
+
+
+    <a href="/appointments/completed" class="btn btn-secondary">Back to Appointments</a>
+  </div>
+
+  <div th:if="${prescription == null}">
+    <p>No prescription found for this appointment.</p>
+  </div>
+</div>
+<!-- Success Message -->
+<div th:if="${successMessage}" class="alert alert-success text-center">
+  <p th:text="${successMessage}"></p>
+</div>
+
+<!-- Error Message -->
+<div th:if="${errorMessage}" class="alert alert-danger text-center">
+  <p th:text="${errorMessage}"></p>
+</div>
+
+</body>
+</html>
