@@ -29,6 +29,8 @@ import com.example.patientapp.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PatientService {
 
@@ -42,4 +44,14 @@ public class PatientService {
         // Save the patient to the database
         patientRepository.save(patient);
     }
+    // Method to get a patient by ID for rest Controller
+    public Patient getPatientById(Long id) {
+        return patientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Patient not found with ID: " + id));
+    }
+    // Method to get all patients
+    public List<Patient> getAllPatients() {
+        return patientRepository.findAll();  // Fetch all patients from the repository
+    }
+
 }

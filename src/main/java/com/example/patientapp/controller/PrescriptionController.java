@@ -41,61 +41,7 @@ private PrescriptionService prescriptionService;
         return "add-prescription";
     }
 
-    // Save Prescription
-    /*@PostMapping("/save")
-    public String savePrescription(@ModelAttribute Prescription prescription,
-                                   @RequestParam("medicineIds") List<Long> medicineIds) {
-        Long appointmentId = (prescription.getAppointment() != null) ? prescription.getAppointment().getId() : null;
 
-        // Step 1: Check if any medicine was selected
-        if (medicineIds == null || medicineIds.isEmpty()) {
-            return "redirect:/prescriptions/add?appointmentId=" + appointmentId + "&error=no-medicines";
-        }
-
-        // Step 2: Fetch medicines from DB
-        List<Medicine> selectedMeds = medicineRepository.findAllById(medicineIds);
-
-        // Step 3: Check if all selected medicines exist in DB
-        if (selectedMeds.size() != medicineIds.size()) {
-            return "redirect:/prescriptions/add?appointmentId=" + appointmentId + "&error=invalid-medicines";
-        }
-
-        // Step 4: Set medicines and save
-        prescription.setMedicines(selectedMeds);
-        prescriptionRepository.save(prescription);
-
-        return "redirect:/appointments/completed";
-    }*/
-    // Save Prescription
-    /*@PostMapping("/save")
-    public String savePrescription(@ModelAttribute Prescription prescription,
-                                   @RequestParam("medicineIds") List<Long> medicineIds,
-                                   RedirectAttributes redirectAttributes) {
-        Long appointmentId = (prescription.getAppointment() != null) ? prescription.getAppointment().getId() : null;
-
-        // Step 1: Check if any medicine was selected
-        if (medicineIds == null || medicineIds.isEmpty()) {
-            redirectAttributes.addAttribute("error", "no-medicines");
-            return "redirect:/prescriptions/add?appointmentId=" + appointmentId;
-        }
-
-        // Step 2: Fetch medicines from DB
-        List<Medicine> selectedMeds = medicineRepository.findAllById(medicineIds);
-
-        // Step 3: Check if all selected medicines exist in DB
-        if (selectedMeds.size() != medicineIds.size()) {
-            redirectAttributes.addAttribute("error", "invalid-medicines");
-            return "redirect:/prescriptions/add?appointmentId=" + appointmentId;
-        }
-
-        // Step 4: Set medicines and save
-        prescription.setMedicines(selectedMeds);
-        prescriptionRepository.save(prescription);
-
-        // Step 5: Add success message and redirect
-        redirectAttributes.addFlashAttribute("successMessage", "Prescription saved successfully!");
-        return "redirect:/appointments/completed";
-    }*/
     @PostMapping("/save")
     public String savePrescription(@ModelAttribute Prescription prescription,
                                    @RequestParam("medicineIds") List<Long> medicineIds,
@@ -205,23 +151,5 @@ private PrescriptionService prescriptionService;
         }
         return "redirect:/appointments/completed";
     }
-
-
-
-
-
-   /* @PostMapping("/update")
-    public String updatePrescription(@ModelAttribute Prescription prescription,
-                                     @RequestParam("medicineIds") List<Long> medicineIds,
-                                     RedirectAttributes redirectAttributes) {
-
-        List<Medicine> selectedMedicines = medicineRepository.findAllById(medicineIds);
-        prescription.setMedicines(selectedMedicines);
-
-        prescriptionRepository.save(prescription);
-        redirectAttributes.addFlashAttribute("successMessage", "Prescription updated successfully!");
-
-        return "redirect:/appointments/completed";
-    }*/
 
 }

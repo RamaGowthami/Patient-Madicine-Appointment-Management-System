@@ -1,3 +1,4 @@
+
 /*package com.example.patientapp.service;
 import com.example.patientapp.model.Appointment;
 import com.example.patientapp.model.Patient;
@@ -40,7 +41,7 @@ public class AppointmentService {
         appointment.setPatient(patient);
         appointmentRepository.save(appointment);
     }*/
-package com.example.patientapp.service;
+        package com.example.patientapp.service;
 
 import com.example.patientapp.model.Appointment;
 import com.example.patientapp.model.Patient;
