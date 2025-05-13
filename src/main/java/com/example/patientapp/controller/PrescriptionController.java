@@ -23,28 +23,34 @@ public class PrescriptionController {
 
     @Autowired
     private PrescriptionRepository prescriptionRepository;
-@Autowired
-private PrescriptionService prescriptionService;
+    @Autowired
+    private PrescriptionService prescriptionService;
     // Show Add Prescription Form
     @GetMapping("/add")
-    public String showPrescriptionForm(@RequestParam("appointmentId") Long appointmentId, Model model) {
+    public String showPrescriptionForm(@RequestParam("appointmentId") Long appointmentId, Model model, RedirectAttributes redirectAttributes) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid appointment ID: " + appointmentId));
 
+        // Check if appointment is canceled or not booked
+        if (!appointment.isBooked() || appointment.getPatient() == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Cannot add a prescription for a canceled or unbooked appointment.");
+            return "redirect:/appointments"; // Redirect to available appointments or dashboard
+        }
+
         Prescription prescription = new Prescription();
-        prescription.setAppointment(appointment); // Link to appointment
+        prescription.setAppointment(appointment); // Link the prescription to the appointment
 
         List<Medicine> medicines = medicineRepository.findAll(); // For multi-select dropdown
 
         model.addAttribute("prescription", prescription);
         model.addAttribute("medicines", medicines);
-        return "add-prescription";
+        return "add-prescription"; // Return to prescription form
     }
+
 
 
     @PostMapping("/save")
     public String savePrescription(@ModelAttribute Prescription prescription,
-                                   @RequestParam("medicineIds") List<Long> medicineIds,
                                    RedirectAttributes redirectAttributes) {
         Long appointmentId = (prescription.getAppointment() != null) ? prescription.getAppointment().getId() : null;
 
@@ -53,29 +59,34 @@ private PrescriptionService prescriptionService;
             return "redirect:/appointments/completed";
         }
 
-        if (medicineIds == null || medicineIds.isEmpty()) {
+        Appointment appointment = appointmentRepository.findById(appointmentId).orElse(null);
+        if (appointment == null || !appointment.isBooked() || appointment.getPatient() == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Cannot add a prescription for a canceled or unbooked appointment.");
+            return "redirect:/appointments";
+        }
+
+        if (prescription.getMedicines() == null || prescription.getMedicines().isEmpty()) {
             redirectAttributes.addAttribute("error", "no-medicines");
             return "redirect:/prescriptions/add?appointmentId=" + appointmentId;
         }
 
-        // Fetch real appointment entity and assign
-        Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid appointment ID"));
+        // Re-fetch full Medicine objects by ID
+        List<Long> medIds = prescription.getMedicines().stream().map(Medicine::getId).toList();
+        List<Medicine> selectedMeds = medicineRepository.findAllById(medIds);
 
-        prescription.setAppointment(appointment);
-
-        List<Medicine> selectedMeds = medicineRepository.findAllById(medicineIds);
-        if (selectedMeds.size() != medicineIds.size()) {
+        if (selectedMeds.size() != medIds.size()) {
             redirectAttributes.addAttribute("error", "invalid-medicines");
             return "redirect:/prescriptions/add?appointmentId=" + appointmentId;
         }
 
         prescription.setMedicines(selectedMeds);
+        prescription.setAppointment(appointment);
         prescriptionRepository.save(prescription);
 
         redirectAttributes.addFlashAttribute("successMessage", "Prescription saved successfully!");
         return "redirect:/appointments/completed";
     }
+
 
 
     @GetMapping("/view")
@@ -139,7 +150,7 @@ private PrescriptionService prescriptionService;
 
 
 
-   @GetMapping("/delete")
+    @GetMapping("/delete")
     public String deletePrescriptionByAppointmentId(@RequestParam("appointmentId") Long appointmentId,
                                                     RedirectAttributes redirectAttributes) {
         Prescription prescription = prescriptionRepository.findByAppointmentId(appointmentId);

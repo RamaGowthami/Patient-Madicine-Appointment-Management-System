@@ -13,14 +13,14 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/patients") // No change here, it's already set correctly for API paths
+@RequestMapping("/api/patients") // API routes for patient management
 @Tag(name = "Patient API", description = "Endpoints for managing patients")
 public class PatientRestController {
 
     @Autowired
     private PatientService patientService;
 
-    // Register a new patient (POST request)
+    // Register a new patient (API request)
     @PostMapping("/register")
     @Operation(summary = "Register a new patient")
     public ResponseEntity<String> registerPatient(@Valid @RequestBody Patient patient) {
@@ -33,7 +33,7 @@ public class PatientRestController {
         }
     }
 
-    // Get patient by ID (GET request)
+    // Get patient by ID (API request)
     @GetMapping("/{id}")
     @Operation(summary = "Get patient details by ID")
     public ResponseEntity<Patient> getPatient(@PathVariable Long id) {
@@ -45,7 +45,7 @@ public class PatientRestController {
         }
     }
 
-    // Get a list of all patients (GET request)
+    // Get a list of all patients (API request)
     @GetMapping
     @Operation(summary = "Get a list of all patients")
     public ResponseEntity<List<Patient>> getAllPatients() {

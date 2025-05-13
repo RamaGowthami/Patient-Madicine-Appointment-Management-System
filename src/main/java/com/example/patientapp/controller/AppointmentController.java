@@ -34,17 +34,30 @@ public class AppointmentController {
 
     @GetMapping("/appointments")
     public String getAvailableAppointments(Model model) {
-        // Fetch appointments that are not booked
-        List<Appointment> availableAppointments = appointmentRepository.findByIsBookedFalse();
+        List<Appointment> allAppointments = appointmentRepository.findAll();  // ✅ Changed
+        boolean allBooked = allAppointments.stream().allMatch(Appointment::isBooked);
 
-        // Check if there are available appointments
-        boolean allBooked = availableAppointments.isEmpty();
-
-        model.addAttribute("availableAppointments", availableAppointments);
-        model.addAttribute("allBooked", allBooked);  // Indicate whether all appointments are booked
-
-        return "appointments"; // Make sure this matches your view name
+        model.addAttribute("availableAppointments", allAppointments);  // ✅ Changed
+        model.addAttribute("allBooked", allBooked);
+        return "appointments";
     }
+
+
+    @GetMapping("/appointments/cancel")
+    public String cancelAppointment(@RequestParam("id") Long appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid appointment ID"));
+
+        appointment.setBooked(false); // Mark the appointment as not booked
+        appointment.setPatient(null); // Optionally, set the patient to null if the appointment is cancelled
+
+        appointmentRepository.save(appointment);
+
+        return "redirect:/appointments?cancelled=true";
+    }
+
+
+
 
 
     @GetMapping("/appointments/bookForm")
@@ -59,7 +72,7 @@ public class AppointmentController {
         model.addAttribute("patients", patients);  // Send patient list to view
         model.addAttribute("doctors", doctors);  // Send doctor list to view
         model.addAttribute("appointment", appointment);  // Add appointment info
-       // model.addAttribute("medicines", medicines); // 🔥 Add this line
+        // model.addAttribute("medicines", medicines); // 🔥 Add this line
         model.addAttribute("isBooked", appointment.isBooked());  // Add flag for booking status
         return "book-appointment"; // Booking form view
     }
@@ -77,28 +90,46 @@ public class AppointmentController {
     }*/
 
 
-    @PostMapping("/appointments/book")
+    /*@PostMapping("/appointments/book")
     public String bookAppointment(@RequestParam("appointmentId") Long appointmentId,
                                   @RequestParam("patientId") Long patientId,
                                   @RequestParam("doctorId") Long doctorId,
-                                 // @RequestParam(value = "medicineIds", required = false) List<Long> medicineIds
+                                  // @RequestParam(value = "medicineIds", required = false) List<Long> medicineIds
 
                                   RedirectAttributes redirectAttributes) {
         appointmentService.bookAppointment(appointmentId, patientId,doctorId);
         // Create a new prescription with the selected medicines
         //List<Medicine> medicines = medicineRepository.findAllById(medicineIds);
-        /*Prescription prescription = new Prescription();
-        prescription.setPatient(patientRepository.findById(patientId).orElseThrow());
-        prescription.setDoctor(doctorRepository.findById(doctorId).orElseThrow());
-        prescription.setAppointment(appointmentRepository.findById(appointmentId).orElseThrow());
-        prescription.setMedicines(medicines);
 
-        prescriptionRepository.save(prescription);*/
         redirectAttributes.addFlashAttribute("successMessage", "Appointment booked successfully!");
 
 
         return "redirect:/appointments";  // Important: reloads the appointment list
+    }*/
+    @PostMapping("/appointments/book")
+    public String bookAppointment(@RequestParam("appointmentId") Long appointmentId,
+                                  @RequestParam("patientId") Long patientId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid appointment ID"));
+
+        if (appointment.isBooked()) {
+            return "redirect:/appointments?error=alreadyBooked";
+        }
+
+        // Set the patient for the appointment
+        Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid patient ID"));
+        appointment.setPatient(patient);
+
+        // Mark the appointment as booked
+        appointment.setBooked(true);
+
+        // Save the appointment
+        appointmentRepository.save(appointment);
+
+        return "redirect:/appointments?success=true";
     }
+
     // Show the "Add Slot" form
     @GetMapping("/appointments/addSlotForm")
     public String showAddSlotForm() {
@@ -125,4 +156,3 @@ public class AppointmentController {
     }
 
 }
-

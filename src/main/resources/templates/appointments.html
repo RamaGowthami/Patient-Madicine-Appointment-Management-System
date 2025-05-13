@@ -1,56 +1,8 @@
-
-<!--<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <title>Appointments</title>
-</head>
-<body>
-
-<h1>Available Appointments</h1>
-<div th:unless="${allBooked}">
-  <table border="1">
-    <thead>
-    <tr>
-      <th>Time Slot</th>
-      <th>Patient</th>
-      <th>Action</th>
-
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="appointment : ${availableAppointments}">
-      <td th:text="${appointment.timeSlot}"></td>
-      <td th:text="${appointment.patient != null ? appointment.patient.name : 'No patient assigned'}"></td>
-      <td>
-        <a th:href="@{'/appointments/bookForm?id=' + ${appointment.id}}">Book Appointment</a>
-      </td>
-
-    </tr>
-    </tbody>
-  </table>
-
-  <div th:if="${successMessage}" style="color: green; font-weight: bold;">
-    <p th:text="${successMessage}"></p>
-  </div>
-
-  <div>
-    <a th:href="@{/appointments/addSlotForm}" class="button">Add New Slots</a>
-  </div>
-
-  <div>
-    <a th:href="@{/appointments/completed}" class="button">Add Prescription</a>
-  </div>
-  <a href="/dashboard" class="button">Go to Dashboard</a>
-</div>
-
-</body>
-</html>-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Appointments</title>
-  <!-- Bootstrap CDN for styling -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body class="bg-light">
@@ -76,7 +28,20 @@
         <td th:text="${appointment.timeSlot}"></td>
         <td th:text="${appointment.patient != null ? appointment.patient.name : 'No patient assigned'}"></td>
         <td>
-          <a class="btn btn-sm btn-primary" th:href="@{'/appointments/bookForm?id=' + ${appointment.id}}">Book Appointment</a>
+          <!-- Show "Book Appointment" if appointment is not booked -->
+          <a th:if="${!appointment.isBooked}" class="btn btn-sm btn-primary"
+             th:href="@{'/appointments/bookForm?id=' + ${appointment.id}}">Book Appointment</a>
+
+          <!-- Show "Cancel Appointment" if appointment is booked -->
+         <!-- <a class="btn btn-sm btn-danger" th:href="@{'/appointments/cancel?id=' + ${appointment.id}}">
+            Force Cancel
+          </a>-->
+          <a th:if="${appointment.booked}"
+             class="btn btn-sm btn-danger"
+             th:href="@{'/appointments/cancel?id=' + ${appointment.id}}"
+             onclick="return confirm('Are you sure you want to cancel this appointment?');">
+            Cancel Appointment
+          </a>
         </td>
       </tr>
       </tbody>
@@ -93,4 +58,3 @@
 
 </body>
 </html>
-
