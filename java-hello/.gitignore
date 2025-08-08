@@ -1,0 +1,9 @@
+# Build outputs
+out/
+
+# OS / editor cruft
+.DS_Store
+*.log
+.idea/
+.vscode/
+*.iml
