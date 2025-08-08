@@ -1,0 +1,14 @@
+# Maven
+/target/
+
+# Fallback build
+/out/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+*.log
