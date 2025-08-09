@@ -1,0 +1,30 @@
+# Node
+node_modules/
+dist/
+*.log
+
+# Java / Maven
+backend/target/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+
+# Env
+*.env
+.env*
+frontend/.env*
+
+# Build outputs
+*.class
+*.jar
+*.war
+
+# Misc
+Thumbs.db
